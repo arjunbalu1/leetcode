@@ -6,34 +6,27 @@ import (
 	"strings"
 )
 
-// Approach 1: Using character frequency count (most efficient)
-// Time: O(n), Space: O(1) - since we only have 26 lowercase letters
+// Approach 1: Using array for character frequency count (FASTEST & MOST EFFICIENT)
+// Time: O(n), Space: O(1) - using fixed array of size 26
 func isAnagram(s string, t string) bool {
 	// If lengths are different, they can't be anagrams
 	if len(s) != len(t) {
 		return false
 	}
 
-	// Count frequency of each character
-	charCount := make(map[rune]int)
+	// Array to count frequency of each letter (a-z)
+	// Index 0 = 'a', Index 1 = 'b', ..., Index 25 = 'z'
+	count := [26]int{}
 
-	// Count characters in string s
-	for _, char := range s {
-		charCount[char]++
+	// Single pass through both strings simultaneously
+	for i := 0; i < len(s); i++ {
+		count[s[i]-'a']++ // Increment count for character in s
+		count[t[i]-'a']-- // Decrement count for character in t
 	}
 
-	// Subtract characters from string t
-	for _, char := range t {
-		charCount[char]--
-		// If count goes negative, t has more of this character than s
-		if charCount[char] < 0 {
-			return false
-		}
-	}
-
-	// Check if all counts are zero
-	for _, count := range charCount {
-		if count != 0 {
+	// If strings are anagrams, all counts should be zero
+	for _, c := range count {
+		if c != 0 {
 			return false
 		}
 	}
@@ -41,7 +34,29 @@ func isAnagram(s string, t string) bool {
 	return true
 }
 
-// Approach 2: Using sorting (less efficient but simpler)
+// Approach 2: Using HashMap (Alternative approach)
+// Time: O(n), Space: O(1) - since we only have 26 lowercase letters
+func isAnagramHashMap(s string, t string) bool {
+	// If lengths are different, they can't be anagrams
+	if len(s) != len(t) {
+		return false
+	}
+
+	countS, countT := make(map[rune]int), make(map[rune]int)
+	for i, ch := range s {
+		countS[ch]++
+		countT[rune(t[i])]++
+	}
+
+	for k, v := range countS {
+		if countT[k] != v {
+			return false
+		}
+	}
+	return true
+}
+
+// Approach 3: Using sorting (less efficient but simpler)
 // Time: O(n log n), Space: O(n)
 func isAnagramSort(s string, t string) bool {
 	if len(s) != len(t) {
@@ -61,32 +76,6 @@ func isAnagramSort(s string, t string) bool {
 	})
 
 	return string(sRunes) == string(tRunes)
-}
-
-// Approach 3: Using array instead of map for better performance (since only 26 lowercase letters)
-// Time: O(n), Space: O(1)
-func isAnagramArray(s string, t string) bool {
-	if len(s) != len(t) {
-		return false
-	}
-
-	// Array to count frequency of each letter (a-z)
-	count := [26]int{}
-
-	// Count characters in both strings
-	for i := 0; i < len(s); i++ {
-		count[s[i]-'a']++ // Increment for s
-		count[t[i]-'a']-- // Decrement for t
-	}
-
-	// Check if all counts are zero
-	for _, c := range count {
-		if c != 0 {
-			return false
-		}
-	}
-
-	return true
 }
 
 func main() {
@@ -112,13 +101,13 @@ func main() {
 		fmt.Printf("s = \"%s\", t = \"%s\"\n", tc.s, tc.t)
 
 		result1 := isAnagram(tc.s, tc.t)
-		result2 := isAnagramSort(tc.s, tc.t)
-		result3 := isAnagramArray(tc.s, tc.t)
+		result2 := isAnagramHashMap(tc.s, tc.t)
+		result3 := isAnagramSort(tc.s, tc.t)
 
 		fmt.Printf("Expected: %t\n", tc.expected)
-		fmt.Printf("HashMap approach: %t\n", result1)
-		fmt.Printf("Sorting approach: %t\n", result2)
-		fmt.Printf("Array approach: %t\n", result3)
+		fmt.Printf("Array approach: %t\n", result1)
+		fmt.Printf("HashMap approach: %t\n", result2)
+		fmt.Printf("Sorting approach: %t\n", result3)
 
 		if result1 == tc.expected && result2 == tc.expected && result3 == tc.expected {
 			fmt.Println("✅ PASSED")
@@ -130,18 +119,18 @@ func main() {
 
 	// Performance explanation
 	fmt.Println("\n=== Algorithm Explanation ===")
-	fmt.Println("1. HashMap Approach (Recommended):")
+	fmt.Println("1. Array Approach (FASTEST - Recommended for LeetCode):")
 	fmt.Println("   - Time: O(n), Space: O(1)")
-	fmt.Println("   - Count character frequencies using a map")
-	fmt.Println("   - Most intuitive and efficient")
+	fmt.Println("   - Uses fixed-size array [26]int for 26 letters")
+	fmt.Println("   - Best performance, direct array access")
 
-	fmt.Println("\n2. Sorting Approach:")
+	fmt.Println("\n2. HashMap Approach:")
+	fmt.Println("   - Time: O(n), Space: O(1)")
+	fmt.Println("   - Count character frequencies using maps")
+	fmt.Println("   - More intuitive but slightly slower")
+
+	fmt.Println("\n3. Sorting Approach:")
 	fmt.Println("   - Time: O(n log n), Space: O(n)")
 	fmt.Println("   - Sort both strings and compare")
-	fmt.Println("   - Simple but less efficient")
-
-	fmt.Println("\n3. Array Approach (Most Efficient):")
-	fmt.Println("   - Time: O(n), Space: O(1)")
-	fmt.Println("   - Uses fixed-size array for 26 letters")
-	fmt.Println("   - Best performance for this specific problem")
+	fmt.Println("   - Simple but least efficient")
 }
