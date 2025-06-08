@@ -41,7 +41,7 @@ func groupAnagramsSafe(strs []string) [][]string {
 		group[freq] = append(group[freq], str)
 	}
 
-	result := [][]string{}
+	result := make([][]string, 0, len(group))
 	for _, anagramGroup := range group {
 		result = append(result, anagramGroup)
 	}
