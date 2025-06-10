@@ -66,6 +66,31 @@ func topKFrequentSorting(nums []int, k int) []int {
 	return result
 }
 
+// Approach 3: User's Cleaner Implementation - Sort Keys by Frequency
+// Time Complexity: O(n log n) - sorting dominates
+// Space Complexity: O(n) for frequency map and keys slice
+func topKFrequentUserVersion(nums []int, k int) []int {
+	// Step 1: Count frequencies
+	freqMap := make(map[int]int)
+	for _, num := range nums {
+		freqMap[num]++
+	}
+
+	// Step 2: Extract all unique numbers (keys from the map)
+	keys := []int{}
+	for key := range freqMap {
+		keys = append(keys, key)
+	}
+
+	// Step 3: Sort keys by their frequency in descending order
+	sort.Slice(keys, func(i, j int) bool {
+		return freqMap[keys[i]] > freqMap[keys[j]]
+	})
+
+	// Step 4: Return the first k elements
+	return keys[:k]
+}
+
 func main() {
 	fmt.Println("=== Top K Frequent Elements - Multiple Solutions ===")
 	fmt.Println()
@@ -89,9 +114,11 @@ func main() {
 		// Test both approaches
 		result1 := topKFrequent(tc.nums, tc.k)
 		result2 := topKFrequentSorting(tc.nums, tc.k)
+		result3 := topKFrequentUserVersion(tc.nums, tc.k)
 
 		fmt.Printf("Bucket Sort (O(n)):            %v\n", result1)
 		fmt.Printf("Sorting Solution (O(n log n)): %v\n", result2)
+		fmt.Printf("User's Corrected Implementation (O(n log n)): %v\n", result3)
 		fmt.Println()
 	}
 
