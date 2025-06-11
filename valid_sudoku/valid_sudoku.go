@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-// Valid Sudoku - Optimized Boolean Array Solution
+// Valid Sudoku - Optimized Boolean Array Solution :)
 // Time Complexity: O(1) - since board is always 9x9, we're doing constant work
 // Space Complexity: O(1) - using fixed-size boolean arrays
 func isValidSudoku(board [][]byte) bool {
