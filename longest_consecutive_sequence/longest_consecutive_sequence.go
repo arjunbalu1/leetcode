@@ -9,10 +9,6 @@ import (
 // Approach 1: Using HashSet (OPTIMAL - O(n) time) hehe
 // Time: O(n), Space: O(n)
 func longestConsecutive(nums []int) int {
-	if len(nums) == 0 {
-		return 0
-	}
-
 	// Create a set for O(1) lookup
 	numSet := make(map[int]bool)
 	for _, num := range nums {
